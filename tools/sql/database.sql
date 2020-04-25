@@ -1,0 +1,1 @@
+create database zeus character set utf8;
