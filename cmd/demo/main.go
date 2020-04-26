@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
 	data := []rune{0x02, 0x51, 0x2C, 0x2C,
@@ -8,4 +10,11 @@ func main() {
 		0x32, 0x2C, 0x4D, 0x2C, 0x30, 0x30, 0x2C,
 		0x03, 0x32, 0x43, 0x0D, 0x0A}
 	fmt.Println(string(data))
+	fmt.Println("sleep")
+	a := map[string]int{
+		"a": 1,
+		"b": 1,
+	}
+	v, e := a["c"]
+	fmt.Println(v, e)
 }

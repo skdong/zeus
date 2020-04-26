@@ -15,16 +15,28 @@ package storage
 import (
 	"flag"
 	"os"
+	"time"
 
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/logs"
 	"github.com/skdong/zeus/pkg/conf"
 	"github.com/skdong/zeus/pkg/storage/util"
 )
+
+func ConnectDB() {
+
+	for util.Connect() != nil {
+		logs.Warn("Connect DB error !!!")
+		logs.Info("retry 1 sencond")
+		time.Sleep(time.Second)
+	}
+}
 
 func Init(config conf.FlagConfig) {
 	beego.Trace("database start to run")
 	initDb(config)
 	util.Connect()
+	//go ConnectDB()
 }
 
 func initDb(config conf.FlagConfig) {

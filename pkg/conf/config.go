@@ -25,6 +25,10 @@ type FlagConfig struct {
 }
 
 var (
+	LogLevel string
+)
+
+var (
 	DbType   string
 	DbHost   string
 	DbPort   string
@@ -43,6 +47,8 @@ func Init() {
 	DbUser = beego.AppConfig.String("db_user")
 	DbPass = beego.AppConfig.String("db_pass")
 	DbName = beego.AppConfig.String("db_name")
+
+	LogLevel = beego.AppConfig.String("log:log_level")
 
 	logs.Info("DbType", ":", DbType)
 	logs.Info(DbType)

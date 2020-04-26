@@ -85,7 +85,7 @@ func Createdb(force bool) {
 	beego.Trace("create database end")
 }
 
-func Connect() {
+func Connect() error {
 	var url string
 	switch conf.DbType {
 	case "mysql":
@@ -94,14 +94,14 @@ func Connect() {
 		break
 	default:
 		beego.Critical("db driver not support:", conf.DbType)
-		return
+		panic("db driver not support")
 	}
 
 	beego.Trace("database start to connect", url)
 	err := orm.RegisterDataBase("default", conf.DbType, url)
 	if err != nil {
 		beego.Error("register data:" + err.Error())
-		panic(err.Error())
+		return err
 	}
 
 	if conf.DbLog == "open" {
@@ -115,4 +115,5 @@ func Connect() {
 	}
 
 	RegisterDBModel() // must register
+	return nil
 }

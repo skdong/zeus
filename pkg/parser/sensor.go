@@ -91,7 +91,7 @@ func (p *Parser) getOne() (w *models.Wind, err error) {
 		logs.Warn(vs)
 		return w, errors.New(msg)
 	}
-	logs.Info(vs)
+	logs.Debug(vs)
 	w = new(models.Wind)
 	w.DeviceId = vs[0]
 	if len(vs[1]) == 0 {
