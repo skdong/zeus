@@ -11,10 +11,10 @@ import (
 )
 
 //<STX>Q,229,002.74,M,00,<ETX>16
-var TAGLEN = 5
+var TAGLEN = 1
 var FIELDNUMS = 5
-var STARTTAG = "<STX>"
-var ENDTAG = "<ETX>"
+var STARTTAG = string(rune(0x02))
+var ENDTAG = string(rune(0x03))
 var SPLIT = ","
 
 type Parser struct {
@@ -70,6 +70,7 @@ func (p *Parser) GetAll() (ws []*models.Wind, err error) {
 		w, err := p.getOne()
 		logs.Debug(p.raw)
 		if err != nil {
+			logs.Warn(err)
 			continue
 		}
 		ws = append(ws, w)
@@ -93,15 +94,28 @@ func (p *Parser) getOne() (w *models.Wind, err error) {
 	logs.Info(vs)
 	w = new(models.Wind)
 	w.DeviceId = vs[0]
-	w.Direction, err = strconv.Atoi(vs[1])
-	if err != nil {
-		logs.Warn("Direction is Not valid")
-		return
+	if len(vs[1]) == 0 {
+		w.Direction = 0
+	} else {
+		w.Direction, err = strconv.Atoi(vs[1])
+		if err != nil {
+			logs.Warn("Direction is Not valid")
+			logs.Warn(err)
+			return
+		}
 	}
-	w.Speed, err = strconv.ParseFloat(vs[2], 64)
-	if err != nil {
-		logs.Warn("Speed is Not valid")
-		return
+
+	if len(vs[2]) == 0 {
+		w.Speed = 0.0
+
+	} else {
+		w.Speed, err = strconv.ParseFloat(vs[2], 64)
+		if err != nil {
+			logs.Warn("Speed is Not valid")
+			logs.Warn(err)
+			return
+		}
+
 	}
 	w.Unit = vs[3]
 	return
