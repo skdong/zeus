@@ -89,7 +89,7 @@ export default {
       runtimeSpeedData:[],
       runtimeDirectionData:[],
       queryUrl:"/winds",
-      socketUrl:"ws://"+location.host+"/api/ws/winds"
+      socketUrl:"ws://101.132.38.140:8080/ws/winds"
     }
   },
   created:function(){

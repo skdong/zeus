@@ -88,7 +88,11 @@ func NewManager() *Manager {
 	m := new(Manager)
 	m.Handlers = make(map[*Handler]bool)
 	m.Cast = make(chan *models.Wind)
-	m.upgrader = websocket.Upgrader{}
+	m.upgrader = websocket.Upgrader{
+		CheckOrigin: func(r *http.Request) bool {
+			return true
+		},
+	}
 	return m
 }
 
