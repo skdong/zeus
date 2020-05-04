@@ -34,17 +34,14 @@ func (h *Handler) HandlerMessage() {
 	var req Request
 	for {
 		if err := h.Conn.ReadJSON(&req); err != nil {
-			logs.Warn(h.Conn, "error")
-			h.Close()
+			logs.Warn(h.Conn.RemoteAddr().String(), err)
 			break
 		}
 		if req.Close {
-			h.Close()
 			break
 		}
 		h.handlerRequest(&req)
 	}
-	logs.Info(h.Conn, "overed")
 }
 
 func (h *Handler) handlerRequest(req *Request) {
@@ -74,6 +71,7 @@ func (h *Handler) SendEntity(wind *models.Wind) {
 	for _, id := range h.Devices {
 		if id == wind.DeviceId {
 			h.Conn.WriteJSON(wind)
+			break
 		}
 	}
 }

@@ -32,11 +32,13 @@ func (w *Wind) TableName() string {
 	return TABLENAME
 }
 
-func (w *Wind) Insert() error {
+func (w *Wind) Insert() (*Wind, error) {
 	if _, e := orm.NewOrm().Insert(w); e != nil {
-		return e
+		return nil, e
 	}
-	return nil
+	var wind Wind
+	w.Query().Filter("Id", w.Id).One(&wind)
+	return &wind, nil
 }
 
 func (w *Wind) Query() orm.QuerySeter {

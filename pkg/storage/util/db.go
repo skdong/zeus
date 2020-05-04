@@ -16,7 +16,6 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
-	"time"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
@@ -24,9 +23,9 @@ import (
 	"github.com/skdong/zeus/pkg/conf"
 )
 
-func init() {
-	orm.DefaultTimeLoc = time.UTC
-}
+//func init() {
+//	orm.DefaultTimeLoc = time.UTC
+//}
 
 func Syncdb(force bool) {
 	beego.Trace("db, sync db start")

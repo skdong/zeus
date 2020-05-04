@@ -49,7 +49,7 @@ func handlerConnection(conn net.Conn) {
 	for {
 		n, err := conn.Read(buffer)
 		if err != nil {
-			logs.Warn("get message err", conn)
+			logs.Warn(conn.RemoteAddr().String(), err)
 			return
 		}
 		data := string(buffer)
@@ -76,10 +76,13 @@ func (c *Collector) HandlerData(data string) error {
 		logs.Warn("get all winds", err)
 	}
 	for _, w := range ws {
-		logs.Info(w.ToString())
-		w.Insert()
-		logs.Info(w)
-		websocket.WebSocketManager.BroadCast(w)
+		logs.Debug(w.ToString())
+		if wind, err := w.Insert(); err == nil {
+			logs.Info(wind)
+			websocket.WebSocketManager.BroadCast(w)
+		} else {
+			logs.Warn(err)
+		}
 	}
 	return nil
 }

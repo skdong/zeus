@@ -35,8 +35,8 @@ func ConnectDB() {
 func Init(config conf.FlagConfig) {
 	beego.Trace("database start to run")
 	initDb(config)
-	util.Connect()
-	//go ConnectDB()
+	//util.Connect()
+	go ConnectDB()
 }
 
 func initDb(config conf.FlagConfig) {
