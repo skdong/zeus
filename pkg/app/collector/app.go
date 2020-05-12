@@ -45,7 +45,7 @@ func handlerConnection(conn net.Conn) {
 	buffer := make([]byte,
 		beego.AppConfig.DefaultInt("collector::buffer_len",
 			512))
-	c := NewCollector()
+	c := NewHandler()
 	for {
 		n, err := conn.Read(buffer)
 		if err != nil {
@@ -59,19 +59,20 @@ func handlerConnection(conn net.Conn) {
 	}
 }
 
-type Collector struct {
-	handler *parser.Parser
+type Handler struct {
+	Parser *parser.Parser
+	Buffer []interface{}
 }
 
-func NewCollector() *Collector {
-	c := new(Collector)
-	c.handler = parser.NewParser()
+func NewHandler() *Handler {
+	c := new(Handler)
+	c.Parser = parser.NewParser()
 	return c
 }
 
-func (c *Collector) HandlerData(data string) error {
-	c.handler.AddData(data)
-	ws, err := c.handler.GetAll()
+func (c *Handler) HandlerData(data string) error {
+	c.Parser.AddData(data)
+	ws, err := c.Parser.GetAll()
 	if err != nil {
 		logs.Warn("get all winds", err)
 	}
