@@ -60,13 +60,14 @@ func handlerConnection(conn net.Conn) {
 }
 
 type Handler struct {
-	Parser *parser.Parser
-	Buffer []interface{}
+	Parser  *parser.Parser
+	Devices DevicesBuffer
 }
 
 func NewHandler() *Handler {
 	c := new(Handler)
 	c.Parser = parser.NewParser()
+	c.Devices = make(DevicesBuffer)
 	return c
 }
 
@@ -80,7 +81,12 @@ func (c *Handler) HandlerData(data string) error {
 		logs.Debug(w.ToString())
 		if wind, err := w.Insert(); err == nil {
 			logs.Info(wind)
-			websocket.WebSocketManager.BroadCast(w)
+			if _, ok := c.Devices[wind.DeviceId]; !ok {
+				c.Devices[wind.DeviceId] = NewDeviceBuffer()
+			}
+			buffer := c.Devices[wind.DeviceId]
+			buffer.AddData(wind)
+			websocket.WebSocketManager.BroadCast(buffer.GetData())
 		} else {
 			logs.Warn(err)
 		}

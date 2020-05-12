@@ -11,11 +11,11 @@ var TABLENAME = "winds"
 
 type Wind struct {
 	Id        int64  `pk:"auto;column(id)"`
-	DeviceId  string `orm:"size(64)"`
+	DeviceId  string `orm:"size(64);index"`
 	Direction int
 	Speed     float64
 	Unit      string    `orm:"size(32)"`
-	CreateAt  time.Time `orm:"auto_now;type(datetime)"`
+	CreateAt  time.Time `orm:"auto_now;type(datetime);index"`
 }
 
 func NewWind(deviceId string, direction int, speed float64, unit string) *Wind {
