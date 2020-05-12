@@ -35,7 +35,7 @@ func (c *WindController) Get() {
 		return
 	}
 
-	limit, err := c.GetInt("limit", 1000)
+	limit, err := c.GetInt("limit", 10000)
 	if err != nil {
 		logs.Warn(err)
 		return
