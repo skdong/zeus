@@ -3,6 +3,7 @@ package collector
 import (
 	"time"
 
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	"github.com/skdong/zeus/pkg/models"
 	"github.com/skdong/zeus/pkg/websocket"
@@ -17,7 +18,8 @@ type DeviceBuffer struct {
 
 func NewDeviceBuffer() *DeviceBuffer {
 	b := new(DeviceBuffer)
-	b.Duration, _ = time.ParseDuration("5m")
+	b.Duration, _ = time.ParseDuration(
+		beego.AppConfig.DefaultString("duration", "5m"))
 	return b
 }
 
