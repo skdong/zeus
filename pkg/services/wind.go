@@ -27,29 +27,16 @@ func (s *Wind) List(deviceId string,
 		q = q.Filter("DeviceId", deviceId)
 	}
 	if startAt != nil {
-		logs.Info("start:", startAt)
+		logs.Info("startAt:", startAt)
 		q = q.Filter("CreateAt__gte", *startAt)
 	}
 	if endAt != nil {
-		logs.Info("end:", endAt)
+		logs.Info("endAt:", endAt)
 		q = q.Filter("CreateAt__lte", *endAt)
 	}
-	q = q.OrderBy("-CreateAt")
+	q = q.OrderBy("CreateAt")
 
-	if limit != -1 {
-		q = q.Limit(limit, start)
-
-	}
-	q.Values(&winds)
-	var speedSum, directionSum float64
-	for _, w := range winds {
-		if w["Speed"] == nil || w["Direction"] == nil {
-			logs.Warn("data not valid", w)
-			continue
-		}
-		speedSum += float64(w["Speed"].(float64))
-		directionSum += float64(w["Direction"].(int64))
-	}
+	q.Limit(limit, start).Values(&winds)
 	list.Num = len(winds)
 	list.Winds = &winds
 	return list, nil
