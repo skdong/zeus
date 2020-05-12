@@ -9,10 +9,8 @@ import (
 )
 
 type WindList struct {
-	Num          int
-	SpeedAvg     float32
-	DirectionAvg float32
-	Winds        *[]orm.Params `json:"winds"`
+	Num   int
+	Winds *[]orm.Params `json:"winds"`
 }
 
 type Wind struct {
@@ -20,12 +18,14 @@ type Wind struct {
 
 func (s *Wind) List(deviceId string,
 	startAt, endAt *time.Time,
-	limt, start int) (list WindList, err error) {
+	limit, start int) (list WindList, err error) {
 
 	w := new(models.Wind)
 	q := w.Query()
 	winds := []orm.Params{}
-	q = q.Filter("DeviceId", deviceId)
+	if len(deviceId) != 0 {
+		q = q.Filter("DeviceId", deviceId)
+	}
 	if startAt != nil {
 		logs.Info("start:", startAt)
 		q = q.Filter("CreateAt__gte", *startAt)
@@ -34,7 +34,13 @@ func (s *Wind) List(deviceId string,
 		logs.Info("end:", endAt)
 		q = q.Filter("CreateAt__lte", *endAt)
 	}
-	q.OrderBy("-CreateAt").Limit(limt, start).Values(&winds)
+	q = q.OrderBy("-CreateAt")
+
+	if limit != -1 {
+		q = q.Limit(limit, start)
+
+	}
+	q.Values(&winds)
 	var speedSum, directionSum float64
 	for _, w := range winds {
 		if w["Speed"] == nil || w["Direction"] == nil {
@@ -45,8 +51,6 @@ func (s *Wind) List(deviceId string,
 		directionSum += float64(w["Direction"].(int64))
 	}
 	list.Num = len(winds)
-	list.SpeedAvg = float32(speedSum / float64(list.Num))
-	list.DirectionAvg = float32(directionSum / float64(list.Num))
 	list.Winds = &winds
 	return list, nil
 }

@@ -14,7 +14,7 @@ type WindController struct {
 
 func (c *WindController) Get() {
 	var startTime, endTime *time.Time
-	deviceId := c.GetString("device_id", "Q")
+	deviceId := c.GetString("device_id", "")
 	startAt := c.GetString("start_at", "")
 	endAt := c.GetString("end_at", "")
 
