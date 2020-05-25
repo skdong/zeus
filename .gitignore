@@ -1,2 +1,4 @@
 static/node_modules/*
 static/dist/*
+build
+build/zeus.exe

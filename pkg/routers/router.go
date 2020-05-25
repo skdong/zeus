@@ -7,6 +7,6 @@ import (
 
 func init() {
 	beego.Router("/", &controllers.MainController{})
-	beego.Router("/winds", &controllers.WindController{}, "*:Get")
-	beego.Router("/ws/winds", &controllers.WindWSController{}, "*:Get")
+	beego.Router("/api/winds", &controllers.WindController{}, "*:Get")
+	beego.Router("/api/ws/winds", &controllers.WindWSController{}, "*:Get")
 }

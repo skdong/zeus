@@ -27,5 +27,6 @@ func (c *WindWSController) Get() {
 	}
 	defer handler.Close()
 	handler.HandlerMessage()
-	logs.Info("close", handler)
+	logs.Info(handler.Conn.RemoteAddr().String(), "closed")
+	c.Ctx.WriteString("over")
 }

@@ -2,12 +2,15 @@ import socket
 import time
 
 def add_one():
-    data = b"<STX>Q,229,002.74,M,00,<ETX>16"
+    data = [0x02, 0x51, 0x2C, 0x2C,
+		0x30, 0x30, 0x30, 0x2E, 0x30,
+		0x32, 0x2C, 0x4D, 0x2C, 0x30, 0x30, 0x2C,
+		0x03, 0x32, 0x43, 0x0D, 0x0A]
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect(("localhost", 8082))
-    for _ in range(1):
+    client.connect(("localhost", 5003))
+    for _ in range(600):
         time.sleep(1)
-        client.send(data)
+        client.send(bytes(data))
 
 def main():
     add_one()

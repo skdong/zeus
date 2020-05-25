@@ -53,6 +53,7 @@ func Init() {
 	logs.Info("DbType", ":", DbType)
 	logs.Info(DbType)
 
-	MYSQLURL = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8", DbUser, DbPass, DbHost, DbPort, DbName)
+	MYSQLURL = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&loc=Local", DbUser, DbPass, DbHost, DbPort, DbName)
+	//MYSQLURL = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8", DbUser, DbPass, DbHost, DbPort, DbName)
 
 }

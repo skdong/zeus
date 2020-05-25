@@ -14,7 +14,7 @@ type WindController struct {
 
 func (c *WindController) Get() {
 	var startTime, endTime *time.Time
-	deviceId := c.GetString("device_id", "Q")
+	deviceId := c.GetString("device_id", "")
 	startAt := c.GetString("start_at", "")
 	endAt := c.GetString("end_at", "")
 
@@ -35,7 +35,7 @@ func (c *WindController) Get() {
 		return
 	}
 
-	limit, err := c.GetInt("limit", 1000)
+	limit, err := c.GetInt("limit", 10000)
 	if err != nil {
 		logs.Warn(err)
 		return

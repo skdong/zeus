@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/astaxie/beego/logs"
 	"github.com/skdong/zeus/pkg/models"
@@ -22,7 +23,9 @@ type Parser struct {
 }
 
 func NewParser() *Parser {
-	return &Parser{}
+	p := new(Parser)
+	p.raw = ""
+	return p
 }
 
 func (p *Parser) AddData(add string) {
@@ -118,5 +121,6 @@ func (p *Parser) getOne() (w *models.Wind, err error) {
 
 	}
 	w.Unit = vs[3]
+	w.CreateAt = time.Now()
 	return
 }

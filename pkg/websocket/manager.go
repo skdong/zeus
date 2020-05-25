@@ -5,7 +5,6 @@ import (
 
 	"github.com/astaxie/beego/logs"
 	"github.com/gorilla/websocket"
-	"github.com/skdong/zeus/pkg/models"
 	"github.com/skdong/zeus/pkg/services"
 )
 
@@ -34,17 +33,14 @@ func (h *Handler) HandlerMessage() {
 	var req Request
 	for {
 		if err := h.Conn.ReadJSON(&req); err != nil {
-			logs.Warn(h.Conn, "error")
-			h.Close()
+			logs.Warn(h.Conn.RemoteAddr().String(), err)
 			break
 		}
 		if req.Close {
-			h.Close()
 			break
 		}
 		h.handlerRequest(&req)
 	}
-	logs.Info(h.Conn, "overed")
 }
 
 func (h *Handler) handlerRequest(req *Request) {
@@ -70,24 +66,25 @@ func (h *Handler) responseEntities(limit int) {
 	}
 }
 
-func (h *Handler) SendEntity(wind *models.Wind) {
+func (h *Handler) SendEntity(wind *Wind) {
 	for _, id := range h.Devices {
 		if id == wind.DeviceId {
 			h.Conn.WriteJSON(wind)
+			break
 		}
 	}
 }
 
 type Manager struct {
 	Handlers map[*Handler]bool
-	Cast     chan *models.Wind
+	Cast     chan *Wind
 	upgrader websocket.Upgrader
 }
 
 func NewManager() *Manager {
 	m := new(Manager)
 	m.Handlers = make(map[*Handler]bool)
-	m.Cast = make(chan *models.Wind)
+	m.Cast = make(chan *Wind)
 	m.upgrader = websocket.Upgrader{
 		CheckOrigin: func(r *http.Request) bool {
 			return true
@@ -114,11 +111,11 @@ func (m *Manager) RemoveHandler(handler *Handler) {
 	delete(m.Handlers, handler)
 }
 
-func (m *Manager) BroadCast(wind *models.Wind) {
+func (m *Manager) BroadCast(wind *Wind) {
 	m.Cast <- wind
 }
 
-func (m *Manager) HandleCast(wind *models.Wind) {
+func (m *Manager) HandleCast(wind *Wind) {
 	logs.Info("Websocket Handler:", len(m.Handlers))
 	for handler := range m.Handlers {
 		handler.SendEntity(wind)
