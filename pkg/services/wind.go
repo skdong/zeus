@@ -36,7 +36,10 @@ func (s *Wind) List(deviceId string,
 	}
 	q = q.OrderBy("CreateAt")
 
-	q.Limit(limit, start).Values(&winds)
+	if limit != -1 {
+		q = q.Limit(limit, start)
+	}
+	q.Values(&winds)
 	list.Num = len(winds)
 	list.Winds = &winds
 	return list, nil

@@ -8,5 +8,6 @@ import (
 func init() {
 	beego.Router("/", &controllers.MainController{})
 	beego.Router("/api/winds", &controllers.WindController{}, "*:Get")
+	beego.Router("/api/speeds", &controllers.SpeedController{}, "*:Get")
 	beego.Router("/api/ws/winds", &controllers.WindWSController{}, "*:Get")
 }
